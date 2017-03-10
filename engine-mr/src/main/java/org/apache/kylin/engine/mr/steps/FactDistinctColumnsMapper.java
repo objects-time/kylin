@@ -41,7 +41,6 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 
-
 /**
  */
 public class FactDistinctColumnsMapper<KEYIN> extends FactDistinctColumnsMapperBase<KEYIN, Object> {
@@ -51,7 +50,6 @@ public class FactDistinctColumnsMapper<KEYIN> extends FactDistinctColumnsMapperB
     public static enum RawDataCounter {
         BYTES
     }
-
 
     protected boolean collectStatistics = false;
     protected CuboidScheduler cuboidScheduler = null;
@@ -166,6 +164,8 @@ public class FactDistinctColumnsMapper<KEYIN> extends FactDistinctColumnsMapperB
             tmpbuf.put(valueBytes);
             outputKey.set(tmpbuf.array(), 0, tmpbuf.position());
             DataType type = factDictCols.get(i).getType();
+            logger.info("col: {}, pos: {} ,value {}, type {} ", factDictCols.get(i), dictionaryColumnIndex[i], fieldValue, type);
+
             sortableKey.init(outputKey, type);
             //judge type
             context.write(sortableKey, EMPTY_TEXT);
@@ -255,7 +255,6 @@ public class FactDistinctColumnsMapper<KEYIN> extends FactDistinctColumnsMapperB
             }
         }
     }
-
 
     private int countNewSize(int oldSize, int dataSize) {
         int newSize = oldSize * 2;

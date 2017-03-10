@@ -24,13 +24,15 @@ import java.io.IOException;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.kylin.metadata.datatype.DataType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SelfDefineSortableKey implements WritableComparable<SelfDefineSortableKey> {
 
+    private static final Logger logger = LoggerFactory.getLogger(SelfDefineSortableKey.class);
+
     public enum TypeFlag {
-        NONE_NUMERIC_TYPE,
-        INTEGER_FAMILY_TYPE,
-        DOUBLE_FAMILY_TYPE
+        NONE_NUMERIC_TYPE, INTEGER_FAMILY_TYPE, DOUBLE_FAMILY_TYPE
     }
 
     private byte typeId; //non-numeric(0000 0000) int(0000 0001) other numberic(0000 0010)
@@ -40,10 +42,6 @@ public class SelfDefineSortableKey implements WritableComparable<SelfDefineSorta
     private Object keyInObj;
 
     public SelfDefineSortableKey() {
-    }
-
-    public SelfDefineSortableKey(Text key, DataType type) {
-        init(key, getTypeIdByDatatype(type));
     }
 
     public void init(Text key, byte typeId) {
@@ -62,9 +60,10 @@ public class SelfDefineSortableKey implements WritableComparable<SelfDefineSorta
         }
     }
 
-
     public void init(Text key, DataType type) {
-        init(key, getTypeIdByDatatype(type));
+        byte typeIdByDatatype = getTypeIdByDatatype(type);
+        logger.info("type is {}, byte is {} ", type, typeIdByDatatype);
+        init(key, typeIdByDatatype);
     }
 
     @Override
@@ -114,7 +113,6 @@ public class SelfDefineSortableKey implements WritableComparable<SelfDefineSorta
         return (typeId == TypeFlag.INTEGER_FAMILY_TYPE.ordinal());
     }
 
-
     public byte getTypeIdByDatatype(DataType type) {
         if (!type.isNumberFamily()) {
             return (byte) TypeFlag.NONE_NUMERIC_TYPE.ordinal();
@@ -130,5 +128,3 @@ public class SelfDefineSortableKey implements WritableComparable<SelfDefineSorta
     }
 
 }
-
-
