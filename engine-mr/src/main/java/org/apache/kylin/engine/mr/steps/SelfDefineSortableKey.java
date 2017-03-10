@@ -48,8 +48,7 @@ public class SelfDefineSortableKey implements WritableComparable<SelfDefineSorta
         this.typeId = typeId;
         this.rawKey = key;
         if (isNumberFamily()) {
-            byte[] buf = key.getBytes();
-            String valueStr = new String(buf, 1, buf.length - 1);
+            String valueStr = new String(key.getBytes(), 1, key.getLength() - 1);
             if (isIntegerFamily()) {
                 this.keyInObj = Integer.parseInt(valueStr);
             } else {
